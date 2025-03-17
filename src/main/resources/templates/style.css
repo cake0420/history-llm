@@ -1,0 +1,120 @@
+body {
+    font-family: 'Batang', serif;
+    background-color: #f2e6d9;
+    color: #3c2415;
+    margin: 0;
+    padding: 0;
+    background-repeat: repeat;
+}
+
+.scroll {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #f8f3e9;
+    border: 2px solid #93785c;
+    border-radius: 5px;
+    padding: 20px 40px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #93785c;
+    padding-bottom: 15px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: #6b4423;
+    letter-spacing: 2px;
+    margin: 10px 0;
+}
+
+.subtitle {
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scholar-image {
+    width: 150px;
+    height: 150px;
+    background-color: #e8d8c0;
+    border: 1px solid #93785c;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    background-image: url('../static/assets/character.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+.chat-area {
+    width: 100%;
+    padding: 20px;
+    background-color: #f8f3e9;
+    border: 1px solid #93785c;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.answer-scroll {
+    background-color: #fff;
+    border: 1px solid #d4b995;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+    font-size: 1rem;
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #93785c;
+    border-radius: 5px;
+    background-color: #fff;
+    box-sizing: border-box;
+    font-family: 'Batang', serif;
+    font-size: 1rem;
+    color: #3c2415;
+    resize: none;
+}
+
+button {
+    background-color: #6b4423;
+    color: #f8f3e9;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-family: 'Batang', serif;
+    font-size: 1rem;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #8d6747;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #93785c;
+}
+
+.ornament {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.5rem;
+    color: #93785c;
+}

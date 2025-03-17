@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: demo
+
+  thymeleaf:
+    view-names: thymeleaf/*
