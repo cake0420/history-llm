@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class GeminiService {
 
     private final static Logger logger = Logger.getLogger(GeminiService.class.getName());
-    private final static String GEMINI_API_KEY = Dotenv.load().get("GEMINI_API_KEY");
+    private final static String GEMINI_API_KEY = Dotenv.configure().ignoreIfMissing().load().get("GEMINI_API_KEY");
     private final  Client client = Client.builder().apiKey(GEMINI_API_KEY).build();
     public String answerQuestion(String question) {
         try {
