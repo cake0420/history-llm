@@ -4,3 +4,6 @@ spring:
 
   thymeleaf:
     view-names: thymeleaf/*
+  web:
+    resources:
+      static-locations: classpath:/static/
