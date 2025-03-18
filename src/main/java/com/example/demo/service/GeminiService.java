@@ -1,7 +1,8 @@
 package com.example.demo.service;
 
+import com.google.common.collect.ImmutableList;
 import com.google.genai.Client;
-import com.google.genai.types.GenerateContentResponse;
+import com.google.genai.types.*;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.http.HttpException;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,54 @@ public class GeminiService {
     private final  Client client = Client.builder().apiKey(GEMINI_API_KEY).build();
     public String answerQuestion(String question) {
         try {
-            GenerateContentResponse response;
+            // Sets the safety settings in the config.
+            ImmutableList<SafetySetting> safetySettings =
+                    ImmutableList.of(
+                            SafetySetting.builder()
+                                    .category("HARM_CATEGORY_HATE_SPEECH")
+                                    .threshold("BLOCK_ONLY_HIGH")
+                                    .build(),
+                            SafetySetting.builder()
+                                    .category("HARM_CATEGORY_DANGEROUS_CONTENT")
+                                    .threshold("BLOCK_LOW_AND_ABOVE")
+                                    .build());
 
-                response = client.models.generateContent("gemini-2.0-flash-001",("you are korea history assistant ai. " +
-                        "you must have to explain question about korea history." +
-                        "if question stay out topic you will define this question is stay out topic." +
-                        "it means, If the question refers to records that don't exist in Korea history, so you say it's an off-topic question."+
-                        "because you are korea history assistant ai so only say about korea history." +
-                        "don't say about react my command.  " +
-                        "it's user question %s. no markdown, please use only korean and plain text.").formatted(question), null);
+            // Sets the system instruction in the config.
+            final Content systemInstruction =
+                    Content.builder()
+                            .parts(ImmutableList.of(Part.builder().text("Your system instruction aims to define clear roles and guidelines for interactions with the AI:\n" +
+                                    "\n" +
+                                    "Role Definition: The AI is designated as a Korean history assistant, responsible solely for addressing questions related to Korean history.\n" +
+                                    "\n" +
+                                    "Manager's Role: As the manager, you set the scope of topics the AI can discuss.\n" +
+                                    "\n" +
+                                    "User's Role: Individuals posing questions are identified as users. If a user's question falls outside the realm of Korean history, the AI should respond by indicating that the question is off-topic.\n" +
+                                    "\n" +
+                                    "Response Format: The AI should reply exclusively in Korean, using plain text without markdown formatting.\n" +
+                                    "\n").build()))
+                            .build();
+
+            // Sets the Google Search tool in the config.
+            Tool googleSearchTool = Tool.builder().googleSearch(GoogleSearch.builder().build()).build();
+
+            GenerateContentConfig config =
+                    GenerateContentConfig.builder()
+                            .candidateCount(1)
+                            .maxOutputTokens(1024)
+                            .safetySettings(safetySettings)
+                            .systemInstruction(systemInstruction)
+                            .tools(ImmutableList.of(googleSearchTool))
+                            .build();
+
+            String model = "gemini-2.0-flash-001";
+
+            if (isJailbreakAttempt(question)) {
+                return "이 질문은 시스템 역할을 변경하려는 시도입니다. 한국 역사에 관한 질문만 해 주세요.";
+            }
+
+            GenerateContentResponse response = client.models.generateContent(model, question, config);
+
+
 
 
             logger.log(Level.INFO, response.text());
@@ -43,7 +83,17 @@ public class GeminiService {
     } catch (Exception e) {
         logger.log(Level.SEVERE, "알 수 없는 오류 발생: " + e.getMessage());
         throw new RuntimeException("Gemini API 요청 중 예기치 않은 오류 발생", e);
+
     }
 
 }
+    private boolean isJailbreakAttempt(String userPrompt) {
+        String lowerCasePrompt = userPrompt.toLowerCase();
+
+        // 시스템 역할을 변경하려는 시도를 감지
+        return lowerCasePrompt.contains("you must have to explain") ||
+                lowerCasePrompt.contains("you are") ||
+                lowerCasePrompt.contains("your role is");
+    }
+
 }
