@@ -3,16 +3,16 @@ package com.example.demo.controller;
 import com.example.demo.model.dto.GeminiServiceRequest;
 import com.example.demo.model.dto.GeminiServiceResponse;
 import com.example.demo.service.GeminiService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class GeminiController {
-    private final GeminiService geminiService = new GeminiService();
-    private final ObjectMapper objectMapper = new ObjectMapper(); // ObjectMapper 인스턴스 생성
+    private final GeminiService geminiService;
 
     @PostMapping("/api/test")
     public ResponseEntity<GeminiServiceResponse> doPost(@RequestBody GeminiServiceRequest serviceRequest) {
